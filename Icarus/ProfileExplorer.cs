@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Icarus
 {
     internal class ProfileExplorer
     {
-        public List<Profile> ProfileList = new List<Profile>();
+        public Profile PlayerProfile;
 
         public ProfileExplorer(string charactersJson)
         {
-            
+            PlayerProfile = JsonSerializer.Deserialize<Profile>(charactersJson);
         }
     }
 

@@ -15,10 +15,17 @@ namespace IcarusToolkitCLI
             var gameData = new Icarus.GameData(Path.Combine(Directory.GetCurrentDirectory(), "sandbox"));
             var charactersData = gameData.GetCharacters();
 
-            foreach (var c in charactersData.Characters)
-            {
-                PrintProperties(c);
-            }
+            PrintProperties(charactersData.Characters, true);
+
+
+            Console.WriteLine();
+
+            var PlayerProfile = gameData.GetProfile();
+
+
+            PrintProperties(PlayerProfile);
+            PrintProperties(PlayerProfile.MetaResources, true);
+
 
             KeepOpen();
         }
@@ -27,7 +34,10 @@ namespace IcarusToolkitCLI
         {
             if(deconstruct)
             {
-                
+                foreach (var o in obj as IEnumerable<object>)
+                {
+                    PrintProperties(o);
+                }
             }
             else
             {

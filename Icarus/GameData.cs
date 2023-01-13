@@ -31,6 +31,11 @@ namespace Icarus
             return new CharacterExplorer(File.ReadAllText(CharactersPath));
         }
 
+        public Profile GetProfile()
+        {
+            return new ProfileExplorer(File.ReadAllText(ProfilePath)).PlayerProfile;
+        }
+
         private bool ValidateGamePath(string gamePath)
         {
             if (Directory.GetFiles(gamePath).Contains(CharactersFileName) && Directory.GetFiles(gamePath).Contains(ProfileFileName)) { return true; } return true;

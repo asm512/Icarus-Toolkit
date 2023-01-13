@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Markup.Xaml;
 using System.IO;
+using Icarus;
 
 namespace Icarus_Toolkit.ViewModels
 {
@@ -20,6 +21,9 @@ namespace Icarus_Toolkit.ViewModels
 
         [ObservableProperty]
         public bool validGamePath = true;
+
+        [ObservableProperty]
+        public bool editMode = false;
 
         [ObservableProperty]
         public List<Icarus.Character> characterList;
@@ -65,13 +69,16 @@ namespace Icarus_Toolkit.ViewModels
         public string characterDisplayName;
 
         [ObservableProperty]
-        public bool editMode = false;
+        public Profile playerProfile;
 
         public void ConfirmPath()
         {
-            var gamedata = new Icarus.GameData(gamePath);
-            CharacterList = gamedata.GetCharacters().Characters ?? throw new Exception("No characters found");
+            var gameData = new Icarus.GameData(gamePath);
+            CharacterList = gameData.GetCharacters().Characters;
+            PlayerProfile = gameData.GetProfile();
+
             SelectedCharacterIndex = 0;
+
             ValidGamePath= true;
         }
 
