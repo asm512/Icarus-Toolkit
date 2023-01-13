@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Icarus
@@ -13,11 +13,11 @@ namespace Icarus
 
         public CharactersData(string charactersJson)
         {
-            CharacterList CharacterList = JsonConvert.DeserializeObject<CharacterList>(charactersJson);
+            CharacterList CharacterList = JsonSerializer.Deserialize<CharacterList>(charactersJson);
 
             foreach (var _char in CharacterList.CharactersStream)
             {
-                Characters.Add(JsonConvert.DeserializeObject<Character>(_char));
+                Characters.Add(JsonSerializer.Deserialize<Character>(_char));
             }
         }
     }
@@ -25,7 +25,7 @@ namespace Icarus
 
     public class CharacterList
     {
-        [JsonProperty("Characters.json")]
+        [JsonPropertyName("Characters.json")]
         public List<string> CharactersStream { get; set; }
     }
 

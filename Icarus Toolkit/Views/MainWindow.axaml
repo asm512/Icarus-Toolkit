@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:uc="clr-namespace:Icarus_Toolkit.Views;assembly=Icarus Toolkit"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+		Width="2000" Height="1000"
         x:Class="Icarus_Toolkit.Views.MainWindow"
         Icon="/Assets/icarus-logo.ico"
         Title="Icarus Toolkit"
@@ -26,6 +27,20 @@
 					MaterialOpacity=".65" />
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
+		<Grid x:Name="MainWindowGrid">
+			<StackPanel>
+				<StackPanel Margin="10" Orientation="Horizontal">
+					<ComboBox Margin="5"
+						x:Name="CharacterSelectCombobox">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding CharacterName}"/>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
+				</StackPanel>
+			</StackPanel>
+		</Grid>
 	</Panel>
 
 </Window>
