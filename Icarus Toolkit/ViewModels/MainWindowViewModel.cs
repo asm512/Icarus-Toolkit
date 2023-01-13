@@ -19,23 +19,70 @@ namespace Icarus_Toolkit.ViewModels
         public string gamePath = Path.Combine(Directory.GetCurrentDirectory(), "sandbox");
 
         [ObservableProperty]
-        public List<Icarus.Character> characterList;
+        public bool validGamePath = true;
 
         [ObservableProperty]
-        public int selectedCharacterIndex = 0;
+        public List<Icarus.Character> characterList;
+
+        private int selectedCharacterIndex;
+        public int SelectedCharacterIndex
+        {
+            get => selectedCharacterIndex;
+            set
+            {
+                selectedCharacterIndex = value;
+                OnPropertyChanged();
+                if (SelectedCharacterIndex != CurrentLoadedCharacterIndex) { LoadText = "Load Character Data*"; }
+                else { LoadText = "Load Character Data"; }
+            }
+        }
 
         [ObservableProperty]
         public Icarus.Character selectedCharacter;
 
+        [ObservableProperty]
+        public int selectedCharacterLevel;
+
+        [ObservableProperty]
+        public string loadText = "Load Character Data";
+
+        [ObservableProperty]
+        public bool isCharacterLoaded = false;
+
+        private int currentLoadedCharacterIndex;
+        public int CurrentLoadedCharacterIndex
+        {
+            get => currentLoadedCharacterIndex;
+            set
+            {
+                currentLoadedCharacterIndex = value;
+                OnPropertyChanged();
+                LoadText = "Load Character Data";
+            }
+        }
+
+        [ObservableProperty]
+        public string characterDisplayName;
+
+        [ObservableProperty]
+        public bool editMode = false;
+
         public void ConfirmPath()
         {
             var gamedata = new Icarus.GameData(gamePath);
-            CharacterList = gamedata.GetCharacters().Characters;
+            CharacterList = gamedata.GetCharacters().Characters ?? throw new Exception("No characters found");
+            SelectedCharacterIndex = 0;
+            ValidGamePath= true;
         }
 
         public void LoadSelectedCharacter()
         {
             SelectedCharacter = characterList[SelectedCharacterIndex];
+            SelectedCharacterLevel = Icarus.Core.GetPlayerLevel(selectedCharacter.XP);
+            CharacterDisplayName = $"{selectedCharacter.CharacterName} (Level {SelectedCharacterLevel})";
+            CurrentLoadedCharacterIndex = SelectedCharacterIndex;
+
+            IsCharacterLoaded = true;
         }
     }
 }

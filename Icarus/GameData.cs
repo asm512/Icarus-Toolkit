@@ -26,9 +26,9 @@ namespace Icarus
             ProfilePath = Path.Combine(GameDataPath, ProfileFileName);
         }
 
-        public CharactersData GetCharacters()
+        public CharacterExplorer GetCharacters()
         {
-            return new CharactersData(File.ReadAllText(CharactersPath));
+            return new CharacterExplorer(File.ReadAllText(CharactersPath));
         }
 
         private bool ValidateGamePath(string gamePath)

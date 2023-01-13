@@ -9,7 +9,7 @@
 		Width="2000" Height="1000"
         x:Class="Icarus_Toolkit.Views.MainWindow"
         Icon="/Assets/icarus-logo.ico"
-        Title="Icarus Toolkit"
+        Title="{Binding CharacterDisplayName, StringFormat='Icarus Toolkit - {0}', FallbackValue='Icarus Toolkit'}"
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="False">
@@ -28,9 +28,9 @@
 			<StackPanel>
 				<StackPanel Margin="10" Orientation="Horizontal">
 					<TextBlock Margin="5" Text="{Binding GamePath}"></TextBlock>
-					<Button Margin="5" Command="{Binding ConfirmPath}">Select</Button>
+					<Button Margin="5" Command="{Binding ConfirmPath}">Select folder</Button>
 				</StackPanel>
-				<StackPanel>
+				<StackPanel IsVisible="{Binding ValidGamePath}">
 					<StackPanel Margin="10" Orientation="Horizontal">
 						<ComboBox Margin="5"
 							x:Name="CharacterSelectCombobox"
@@ -42,21 +42,29 @@
 								</DataTemplate>
 							</ComboBox.ItemTemplate>
 						</ComboBox>
-						<Button Margin="5" Command="{Binding LoadSelectedCharacter}">Load Character Data</Button>
+						<Button Margin="5" Command="{Binding LoadSelectedCharacter}" Content="{Binding LoadText}"></Button>
+						<CheckBox Margin="5" IsChecked="{Binding EditMode}" IsVisible="{Binding IsCharacterLoaded}">Edit mode</CheckBox>
+						<Button Margin="5" IsVisible="{Binding EditMode}">Save Character Data</Button>
 					</StackPanel>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="*"></ColumnDefinition>
-							<ColumnDefinition Width="*"></ColumnDefinition>
-							<ColumnDefinition Width="4*"></ColumnDefinition>
-						</Grid.ColumnDefinitions>
-						<StackPanel Margin="10">
-							<TextBlock Margin="5">XP</TextBlock>
-						</StackPanel>
-						<StackPanel Margin="10" Grid.Column="1">
-							<TextBlock Margin="5" Text="{Binding SelectedCharacter.XP}"></TextBlock>
-						</StackPanel>
-					</Grid>
+					<ScrollViewer>
+						<Grid ShowGridLines="True">
+							<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"></ColumnDefinition>
+									<ColumnDefinition Width="*"></ColumnDefinition>
+									<ColumnDefinition Width="10*"></ColumnDefinition>
+								</Grid.ColumnDefinitions>
+							<StackPanel Margin="10" Grid.Column="0">
+								<TextBlock Margin="5" Text="{Binding SelectedCharacterLevel, StringFormat='XP (Level {0})'}">XP</TextBlock>
+							<TextBlock Margin="5">Dead?</TextBlock>
+							<TextBlock Margin="5">Abandoned?</TextBlock>
+							</StackPanel>
+							<StackPanel Margin="10" Grid.Column="1" IsVisible="{Binding IsCharacterLoaded}">
+								<TextBlock Margin="5" Text="{Binding SelectedCharacter.XP, StringFormat=' {0}xp'}"></TextBlock>
+								<CheckBox Margin="5" IsChecked="{Binding SelectedCharacter.IsDead}" IsEnabled="{Binding EditMode}"></CheckBox>
+								<CheckBox Margin="5" IsChecked="{Binding SelectedCharacter.IsAbandoned}" IsEnabled="{Binding EditMode}"></CheckBox>
+							</StackPanel>
+						</Grid>
+					</ScrollViewer>
 				</StackPanel>
 			</StackPanel>
 		</Grid>

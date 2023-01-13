@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Icarus
 {
-    public class CharactersData
+    public class CharacterExplorer
     {
         public List<Character> Characters = new List<Character>();
 
-        public CharactersData(string charactersJson)
+        public CharacterExplorer(string charactersJson)
         {
             CharacterList CharacterList = JsonSerializer.Deserialize<CharacterList>(charactersJson);
 
@@ -21,7 +21,6 @@ namespace Icarus
             }
         }
     }
-
 
     public class CharacterList
     {

@@ -86,7 +86,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterExplorer.cs" />
+    <Compile Include="Core.cs" />
     <Compile Include="GameData.cs" />
+    <Compile Include="ProfileExplorer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
