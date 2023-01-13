@@ -1,9 +1,10 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Icarus_Toolkit.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:uc="clr-namespace:Icarus_Toolkit.Views;assembly=Icarus Toolkit"
+<Window
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:vm="using:Icarus_Toolkit.ViewModels"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:uc="clr-namespace:Icarus_Toolkit.Views;assembly=Icarus Toolkit"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 		Width="2000" Height="1000"
         x:Class="Icarus_Toolkit.Views.MainWindow"
@@ -12,11 +13,7 @@
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="False">
-
-	<Design.DataContext>
-		<vm:MainWindowViewModel/>
-	</Design.DataContext>
-
+	
 	<Panel>
 		<ExperimentalAcrylicBorder IsHitTestVisible="False">
 			<ExperimentalAcrylicBorder.Material>
@@ -27,20 +24,41 @@
 					MaterialOpacity=".65" />
 			</ExperimentalAcrylicBorder.Material>
 		</ExperimentalAcrylicBorder>
-		<Grid x:Name="MainWindowGrid">
+		<Grid>
 			<StackPanel>
 				<StackPanel Margin="10" Orientation="Horizontal">
-					<ComboBox Margin="5"
-						x:Name="CharacterSelectCombobox">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<TextBlock Text="{Binding CharacterName}"/>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
+					<TextBlock Margin="5" Text="{Binding GamePath}"></TextBlock>
+					<Button Margin="5" Command="{Binding ConfirmPath}">Select</Button>
+				</StackPanel>
+				<StackPanel>
+					<StackPanel Margin="10" Orientation="Horizontal">
+						<ComboBox Margin="5"
+							x:Name="CharacterSelectCombobox"
+							Items="{Binding CharacterList}"
+							SelectedIndex="{Binding SelectedCharacterIndex}">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding CharacterName}"/>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<Button Margin="5" Command="{Binding LoadSelectedCharacter}">Load Character Data</Button>
+					</StackPanel>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*"></ColumnDefinition>
+							<ColumnDefinition Width="*"></ColumnDefinition>
+							<ColumnDefinition Width="4*"></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<StackPanel Margin="10">
+							<TextBlock Margin="5">XP</TextBlock>
+						</StackPanel>
+						<StackPanel Margin="10" Grid.Column="1">
+							<TextBlock Margin="5" Text="{Binding SelectedCharacter.XP}"></TextBlock>
+						</StackPanel>
+					</Grid>
 				</StackPanel>
 			</StackPanel>
 		</Grid>
 	</Panel>
-
 </Window>

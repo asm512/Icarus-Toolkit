@@ -23,7 +23,6 @@ namespace Icarus_Toolkit
                     DataContext = new MainWindowViewModel(),
                 };
             }
-
             base.OnFrameworkInitializationCompleted();
         }
     }
