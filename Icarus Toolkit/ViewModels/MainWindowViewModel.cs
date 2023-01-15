@@ -189,7 +189,7 @@ namespace Icarus_Toolkit.ViewModels
         {
             IsWorking = true;
 
-            GameData gameData = new(GamePath);
+            gameData = new(GamePath);
 
             if(gameData.ValidGamePath)
             {
