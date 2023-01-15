@@ -5,14 +5,28 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:uc="clr-namespace:Icarus_Toolkit.Views;assembly=Icarus Toolkit"
+	xmlns:utils="clr-namespace:Icarus_Toolkit.Utils"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-		Width="2000" Height="1000"
+		MinWidth="800" MinHeight="800"
+		WindowStartupLocation="CenterScreen"
+		Width="1800" Height="1000"
         x:Class="Icarus_Toolkit.Views.MainWindow"
-        Icon="/Assets/icarus-logo.ico"
-        Title="{Binding CharacterDisplayName, StringFormat='Icarus Toolkit - {0}', FallbackValue='Icarus Toolkit'}"
+        Icon="/Assets/icarus_logo.ico"
+        Title="{Binding CharacterDisplayName, StringFormat='Icarus Toolkit- {0}', FallbackValue='Icarus Toolkit'}"
 		TransparencyLevelHint="AcrylicBlur"
 		Background="Transparent"
 		ExtendClientAreaToDecorationsHint="False">
+	<Window.Resources>
+		<utils:TimerConverter x:Key="timerConverter" />
+	</Window.Resources>
+	<Window.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="Margin" Value="5"/>
+		</Style>
+		<Style Selector="Button">
+			<Setter Property="Margin" Value="5"/>
+		</Style>
+	</Window.Styles>
 	
 	<Panel>
 		<ExperimentalAcrylicBorder IsHitTestVisible="False">
@@ -27,12 +41,12 @@
 		<Grid>
 			<StackPanel>
 				<StackPanel Margin="10" Orientation="Horizontal">
-					<TextBlock Margin="5" Text="{Binding GamePath}"></TextBlock>
-					<Button Margin="5" Command="{Binding ConfirmPath}">Select folder</Button>
+					<TextBlock Margin="5,9" Text="{Binding GamePath}"></TextBlock>
+					<Button Command="{Binding ConfirmPath}">Select folder</Button>
 				</StackPanel>
 				<StackPanel IsVisible="{Binding ValidGamePath}">
 					<StackPanel Margin="10" Orientation="Horizontal">
-						<ComboBox Margin="5"
+						<ComboBox
 							x:Name="CharacterSelectCombobox"
 							Items="{Binding CharacterList}"
 							SelectedIndex="{Binding SelectedCharacterIndex}">
@@ -42,30 +56,46 @@
 								</DataTemplate>
 							</ComboBox.ItemTemplate>
 						</ComboBox>
-						<Button Margin="5" Command="{Binding LoadSelectedCharacter}" Content="{Binding LoadText}"></Button>
-						<CheckBox Margin="5" IsChecked="{Binding EditMode}" IsVisible="{Binding IsCharacterLoaded}">Edit mode</CheckBox>
-						<Button Margin="5" IsVisible="{Binding EditMode}">Save Character Data</Button>
+						<Button Command="{Binding LoadSelectedCharacter}" Content="{Binding LoadText}"></Button>
+						<CheckBox IsChecked="{Binding EditMode}" IsVisible="{Binding IsCharacterLoaded}">Edit mode</CheckBox>
+						<Button IsVisible="{Binding EditMode}" Command="{Binding DuplicateCharacter}">Duplicate Character</Button>
+						<Button IsVisible="{Binding EditMode}" Command="{Binding ExportData}">Save Character Data</Button>
 					</StackPanel>
 					<ScrollViewer>
 						<Grid ShowGridLines="True">
 							<Grid.ColumnDefinitions>
 									<ColumnDefinition Width="*"></ColumnDefinition>
 									<ColumnDefinition Width="*"></ColumnDefinition>
-									<ColumnDefinition Width="10*"></ColumnDefinition>
+									<ColumnDefinition Width="*"></ColumnDefinition>
+									<ColumnDefinition Width="5*"></ColumnDefinition>
 								</Grid.ColumnDefinitions>
-							<StackPanel Margin="10" Grid.Column="0">
-								<TextBlock Margin="5" Text="{Binding SelectedCharacterLevel, StringFormat='XP (Level {0})'}">XP</TextBlock>
-							<TextBlock Margin="5">Dead?</TextBlock>
-							<TextBlock Margin="5">Abandoned?</TextBlock>
+							<StackPanel Margin="10" Grid.Column="0" IsVisible="{Binding IsCharacterLoaded}">
+								<Image Height="50" Source="/Assets/icarus_logo.png"></Image>
+								<Slider Minimum="0" Maximum="{Binding MaxXP}" Value="{Binding XP}" IsEnabled="{Binding EditMode}"></Slider>
+								<TextBlock Text="{Binding XP, StringFormat=' {0}xp'}"></TextBlock>
+								<TextBlock Text="{Binding XPLevel, StringFormat='Level {0}'}"></TextBlock>
 							</StackPanel>
 							<StackPanel Margin="10" Grid.Column="1" IsVisible="{Binding IsCharacterLoaded}">
-								<TextBlock Margin="5" Text="{Binding SelectedCharacter.XP, StringFormat=' {0}xp'}"></TextBlock>
-								<CheckBox Margin="5" IsChecked="{Binding SelectedCharacter.IsDead}" IsEnabled="{Binding EditMode}"></CheckBox>
-								<CheckBox Margin="5" IsChecked="{Binding SelectedCharacter.IsAbandoned}" IsEnabled="{Binding EditMode}"></CheckBox>
+								<Image Height="50" Source="avares://Icarus Toolkit/Assets/ren.png"/>
+								<Slider Minimum="0" Maximum="{Binding MaximumRen}" Value="{Binding Ren}" IsEnabled="{Binding EditMode}"></Slider>
+								<TextBlock Text="{Binding Ren, StringFormat=' {0} Ren'}"></TextBlock>
+								<ProgressBar Margin="0,10"  Value="100" Foreground="Gray"></ProgressBar>
+								<Image Height="50" Source="avares://Icarus Toolkit/Assets/exotic.png"/>
+								<Slider Minimum="0" Maximum="{Binding MaximumExotic}" Value="{Binding Exotic}" IsEnabled="{Binding EditMode}"></Slider>
+								<TextBlock Text="{Binding Exotic, StringFormat=' {0} Exotic(s)'}"></TextBlock>
+								<ProgressBar Margin="0,10" Value="100" Foreground="Gray"></ProgressBar>
 							</StackPanel>
 						</Grid>
 					</ScrollViewer>
 				</StackPanel>
+			</StackPanel>
+			<StackPanel VerticalAlignment="Bottom">
+				<TextBlock HorizontalAlignment="Left" IsVisible="{Binding IsWorking}">Loading...</TextBlock>
+				<Grid IsVisible="{Binding IsInformationStringVisible}">
+					<TextBlock Foreground="Orange" HorizontalAlignment="Right" Text="{Binding InformationString}">
+					</TextBlock>
+				</Grid>
+				<ProgressBar Value="{Binding Progress}" IsVisible="{Binding IsProgressVisible}" ShowProgressText="True"></ProgressBar>
 			</StackPanel>
 		</Grid>
 	</Panel>

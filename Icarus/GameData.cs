@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Icarus;
-using System.Net.Http.Headers;
 
 namespace Icarus
 {
@@ -28,12 +23,12 @@ namespace Icarus
 
         public CharacterExplorer GetCharacters()
         {
-            return new CharacterExplorer(File.ReadAllText(CharactersPath));
+            return new CharacterExplorer(CharactersPath);
         }
 
-        public Profile GetProfile()
+        public ProfileExplorer GetProfile()
         {
-            return new ProfileExplorer(File.ReadAllText(ProfilePath)).PlayerProfile;
+            return new ProfileExplorer(ProfilePath);
         }
 
         private bool ValidateGamePath(string gamePath)

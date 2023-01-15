@@ -2,26 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Icarus
 {
-    internal class ProfileExplorer
+    public class ProfileExplorer
     {
         public Profile PlayerProfile;
+        private readonly string profilePath;
 
-        public ProfileExplorer(string charactersJson)
+        public ProfileExplorer(string profilePath)
         {
-            PlayerProfile = JsonSerializer.Deserialize<Profile>(charactersJson);
+            this.profilePath = profilePath;
+            RefreshProfile();
         }
-    }
 
-    public class MetaResource
-    {
-        public string MetaRow { get; set; }
-        public int Count { get; set; }
+        public void ExportProfile(Profile profile)
+        {
+            var serializerOptions = new JsonSerializerOptions() { WriteIndented = true };
+            File.WriteAllText(profilePath, JsonSerializer.Serialize(profile, serializerOptions));
+        }
+
+        public void RefreshProfile()
+        {
+            PlayerProfile = JsonSerializer.Deserialize<Profile>(File.ReadAllText(profilePath));
+        }
     }
 
     public class Profile
@@ -32,6 +40,12 @@ namespace Icarus
         public List<Talent> Talents { get; set; }
         public int NextChrSlot { get; set; }
         public int DataVersion { get; set; }
+    }
+
+    public class MetaResource
+    {
+        public string MetaRow { get; set; }
+        public int Count { get; set; }
     }
 
     public class Talent

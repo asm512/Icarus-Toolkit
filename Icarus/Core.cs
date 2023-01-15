@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Icarus
 {
-    public class Core
+    public static class Core
     {
         public static int GetPlayerLevel(int xp)
         {
@@ -20,7 +20,7 @@ namespace Icarus
             return -1;
         }
 
-        internal static Dictionary<int, (int min, int max)> XPRanges = new Dictionary<int, (int min, int max)>
+        public static Dictionary<int, (int min, int max)> XPRanges = new Dictionary<int, (int min, int max)>
         {
             {0, (0, 0)},
             {1, (1, 2400)},
@@ -43,7 +43,15 @@ namespace Icarus
             {18, (435601, 490400)},
             {19, (490401, 545200)},
             {20, (545201, 600000)},
-            {99, (600001, 999999999) }
+            {25, (600001, 975000)},
+            {30, (975001, 1400000)},
+            {35, (1400001, 1942000)},
+            {40, (1942001, 2550000)},
+            {45, (2550001, 3200000)},
+            {50, (3200001, 3890000)},
+            {55, (3890001, 4625000)},
+            {60, (4625001, 5400000)},
+            {51, (5400001, 999999999) }
         };
     }
 }

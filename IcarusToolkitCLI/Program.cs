@@ -23,9 +23,10 @@ namespace IcarusToolkitCLI
             var PlayerProfile = gameData.GetProfile();
 
 
-            PrintProperties(PlayerProfile);
-            PrintProperties(PlayerProfile.MetaResources, true);
+            PrintProperties(PlayerProfile.PlayerProfile);
+            PrintProperties(PlayerProfile.PlayerProfile.MetaResources, true);
 
+            Console.WriteLine();
 
             KeepOpen();
         }

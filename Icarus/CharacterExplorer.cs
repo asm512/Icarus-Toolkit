@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Icarus
@@ -10,10 +11,32 @@ namespace Icarus
     public class CharacterExplorer
     {
         public List<Character> Characters = new List<Character>();
+        private string charactersFile;
 
-        public CharacterExplorer(string charactersJson)
+        public CharacterExplorer(string charactersFile)
         {
-            CharacterList CharacterList = JsonSerializer.Deserialize<CharacterList>(charactersJson);
+            this.charactersFile = charactersFile;
+            RefreshCharacters();
+        }
+        public void ExportCharacters(List<Character> characters)
+        {
+            var serializerOptions = new JsonSerializerOptions() { WriteIndented = true };
+
+            var charList = new CharacterList()
+            {
+                CharactersStream = new List<string>()
+            };
+            foreach (var _char in characters)
+            {
+                charList.CharactersStream.Add(JsonSerializer.Serialize(_char, serializerOptions));
+            }
+
+            File.WriteAllText(charactersFile, JsonSerializer.Serialize(charList, serializerOptions).Replace("u0022", @""""));
+        }
+
+        public void RefreshCharacters()
+        {
+            CharacterList CharacterList = JsonSerializer.Deserialize<CharacterList>(File.ReadAllText(charactersFile));
 
             foreach (var _char in CharacterList.CharactersStream)
             {
