@@ -1,17 +1,11 @@
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Icarus_Toolkit.Views;
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Avalonia.Markup.Xaml;
-using System.IO;
 using Icarus;
 using Avalonia.Threading;
+using Avalonia.Controls;
+using Icarus_Toolkit.Views;
+using System.Threading.Tasks;
 
 namespace Icarus_Toolkit.ViewModels
 {
@@ -19,12 +13,12 @@ namespace Icarus_Toolkit.ViewModels
     {
         #region Core & UI
         [ObservableProperty]
-        public string gamePath = Path.Combine(Directory.GetCurrentDirectory(), "sandbox");
+        private string gamePath;
 
         private GameData gameData;
 
         [ObservableProperty]
-        private bool validGamePath = true;
+        private bool validGamePath = false;
 
         [ObservableProperty]
         private bool isWorking = false;
@@ -127,17 +121,20 @@ namespace Icarus_Toolkit.ViewModels
 
         #region UserEdits
 
-        private int xP;
-        public int XP
+        private int editedXP;
+        public int EditedXP
         {
-            get => xP;
+            get => editedXP;
             set
             {
-                xP = value;
+                editedXP = value;
                 OnPropertyChanged();
-                XPLevel = Core.GetPlayerLevel(xP);
+                XPLevel = Core.GetPlayerLevel(editedXP);
             }
         }
+
+        [ObservableProperty]
+        private string editedName;
         #endregion
         #endregion
 
@@ -164,26 +161,61 @@ namespace Icarus_Toolkit.ViewModels
         #endregion
         #endregion
 
-
-        public void ConfirmPath()
+        public async Task<string> GetFolderFromUser(string title)
         {
+            var dialog = new OpenFolderDialog()
+            {
+                Title = title
+            };
+            var result = await dialog.ShowAsync(MainWindow.MainWindowHandle);
+            if (result != null)
+            {
+                return result;
+            }
+            return await GetFolderFromUser(title);
+        }
+
+        public async Task SelectGameFolder()
+        {
+            ValidGamePath = false;
+            var selectedPath = await GetFolderFromUser("Select Game Data Folder");
+            GamePath = selectedPath;
             ReloadGameData();
         }
 
+        public Task SelectGameFolderButtonClicked() => SelectGameFolder();
+
         public void ReloadGameData()
         {
-            gameData = new GameData(gamePath);
+            IsWorking = true;
 
-            characterExplorerHandle = gameData.GetCharacters();
-            CharacterList = characterExplorerHandle.Characters;
+            GameData gameData = new(GamePath);
 
-            profileExplorerHandle = gameData.GetProfile();
-            PlayerProfile = gameData.GetProfile().PlayerProfile;
+            if(gameData.ValidGamePath)
+            {
+                characterExplorerHandle = gameData.GetCharacters();
+                CharacterList = characterExplorerHandle.Characters;
 
-            SelectedCharacterIndex = 0;
-            ValidGamePath = true;
-            InformationString = "Game data loaded";
+                profileExplorerHandle = gameData.GetProfile();
+                PlayerProfile = gameData.GetProfile().PlayerProfile;
 
+                SelectedCharacterIndex = 0;
+                ValidGamePath = true;
+                InformationString = "Game data loaded";
+                IsWorking = false;
+            }
+            else
+            {
+                IsWorking = false;
+                InformationString = "Selected path was not a valid game data dir";
+                SelectGameFolderButtonClicked();
+            }
+        }
+
+        private void BackupData()
+        {
+            gameData.BackupData();
+            InformationString = "Game Data Backed Up";
         }
 
         private void LoadSelectedCharacter()
@@ -194,7 +226,8 @@ namespace Icarus_Toolkit.ViewModels
             CharacterDisplayName = $"{selectedCharacter.CharacterName} (Level {SelectedCharacterLevel})";
 
             #region Character
-            XP = selectedCharacter.XP;
+            EditedXP = selectedCharacter.XP;
+            EditedName = selectedCharacter.CharacterName;
             #endregion
             #region Profile
             Ren = PlayerProfile.MetaResources[0].Count;
@@ -217,7 +250,7 @@ namespace Icarus_Toolkit.ViewModels
             profileExplorerHandle.ExportProfile(PlayerProfile);
             Progress = 80;
             ReloadCharacter();
-            InformationString = $"User {PlayerProfile.UserID} was saved";
+            InformationString = $"User #{PlayerProfile.UserID} | {selectedCharacter.CharacterName} was saved";
 
             Progress = 100;
             WasCharacterExported = true;
@@ -227,7 +260,8 @@ namespace Icarus_Toolkit.ViewModels
 
         private void SetCharacterValues()
         {
-            SelectedCharacter.XP = XP;
+            selectedCharacter.CharacterName = editedName;
+            SelectedCharacter.XP = EditedXP;
             CharacterList[selectedCharacterIndex] = SelectedCharacter;
             InformationString = "Character values saved";
         }

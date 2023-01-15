@@ -10,12 +10,11 @@ namespace Icarus_Toolkit.Views
 {
     public partial class MainWindow : Window
     {
+        public static MainWindow MainWindowHandle { get; private set; }
         public MainWindow()
         {
             InitializeComponent();
-            var dc = new MainWindowViewModel();
-            DataContext = dc;
-            dc.ConfirmPath();
+            MainWindowHandle = this;
         }
     }
 }

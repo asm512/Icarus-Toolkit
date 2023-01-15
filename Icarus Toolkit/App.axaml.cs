@@ -20,7 +20,7 @@ namespace Icarus_Toolkit
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    //DataContext = new MainWindowViewModel(),
+                    DataContext = new MainWindowViewModel(),
                 };
             }
             base.OnFrameworkInitializationCompleted();
