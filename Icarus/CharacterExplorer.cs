@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
-using System.Threading.Tasks;
+using Serilog;
 
 namespace Icarus
 {
     public class CharacterExplorer
     {
         public List<Character> Characters = new List<Character>();
-        private string charactersFile;
+        private readonly string charactersFile;
 
         public CharacterExplorer(string charactersFile)
         {
             this.charactersFile = charactersFile;
             RefreshCharacters();
         }
-        public void ExportCharacters(List<Character> characters)
+        public bool ExportCharacters(List<Character> characters)
         {
             var serializerOptions = new JsonSerializerOptions() { WriteIndented = true };
 
@@ -31,7 +30,17 @@ namespace Icarus
                 charList.CharactersStream.Add(JsonSerializer.Serialize(_char, serializerOptions));
             }
 
-            File.WriteAllText(charactersFile, JsonSerializer.Serialize(charList, serializerOptions).Replace("u0022", @""""));
+            try
+            {
+                File.WriteAllText(charactersFile, JsonSerializer.Serialize(charList, serializerOptions).Replace("u0022", @""""));
+                Log.Information($"Exported {characters.Count} to {charactersFile}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return false;
+            }
         }
 
         public void RefreshCharacters()
@@ -42,6 +51,7 @@ namespace Icarus
             {
                 Characters.Add(JsonSerializer.Deserialize<Character>(_char));
             }
+            Log.Information($"Refreshed {Characters.Count} characters");
         }
     }
 

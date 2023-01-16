@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace Icarus
 {
@@ -20,10 +21,21 @@ namespace Icarus
             RefreshProfile();
         }
 
-        public void ExportProfile(Profile profile)
+        public bool ExportProfile(Profile profile)
         {
             var serializerOptions = new JsonSerializerOptions() { WriteIndented = true };
-            File.WriteAllText(profilePath, JsonSerializer.Serialize(profile, serializerOptions));
+
+            try
+            {
+                File.WriteAllText(profilePath, JsonSerializer.Serialize(profile, serializerOptions));
+                Log.Information("Exported profile");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return false;
+            }
         }
 
         public void RefreshProfile()

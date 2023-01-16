@@ -7,9 +7,9 @@
 	xmlns:uc="clr-namespace:Icarus_Toolkit.Views;assembly=Icarus Toolkit"
 	xmlns:utils="clr-namespace:Icarus_Toolkit.Utils"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-		MinWidth="800" MinHeight="800"
+		MinWidth="800" MinHeight="400"
 		WindowStartupLocation="CenterScreen"
-		Width="1800" Height="1000"
+		Width="1200" Height="600"
         x:Class="Icarus_Toolkit.Views.MainWindow"
         Icon="/Assets/icarus_logo.ico"
         Title="{Binding CharacterDisplayName, StringFormat='Icarus Toolkit- {0}', FallbackValue='Icarus Toolkit'}"
@@ -90,11 +90,11 @@
 								<TextBlock Text="{Binding XPLevel, StringFormat='Level {0}'}"></TextBlock>
 							</StackPanel>
 							<StackPanel Margin="10" Grid.Column="1" IsVisible="{Binding IsCharacterLoaded}">
-								<Image Margin="5" Width="100" Source="avares://Icarus Toolkit/Assets/ren.png"/>
+								<Image Margin="5" Width="100" Source="/Assets/ren.png"/>
 								<Slider Minimum="0" Maximum="{Binding MaximumRen}" Value="{Binding Ren}" IsEnabled="{Binding EditMode}"></Slider>
 								<TextBlock Text="{Binding Ren, StringFormat=' {0} Ren'}"></TextBlock>
 								<ProgressBar Value="100" Foreground="Gray"></ProgressBar>
-								<Image Margin="5" Width="100" Source="avares://Icarus Toolkit/Assets/exotic.png"/>
+								<Image Margin="5" Width="100" Source="/Assets/exotic.png"/>
 								<Slider Minimum="0" Maximum="{Binding MaximumExotic}" Value="{Binding Exotic}" IsEnabled="{Binding EditMode}"></Slider>
 								<TextBlock Text="{Binding Exotic, StringFormat=' {0} Exotic(s)'}"></TextBlock>
 								<ProgressBar Value="100" Foreground="Gray"></ProgressBar>

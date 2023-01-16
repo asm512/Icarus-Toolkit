@@ -24,6 +24,7 @@ namespace Icarus_Toolkit
                 };
             }
             base.OnFrameworkInitializationCompleted();
+            Utils.Utils.InitLog();
         }
     }
 }

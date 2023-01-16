@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
+using Serilog;
 
 namespace Icarus
 {
@@ -19,14 +20,19 @@ namespace Icarus
 
         public GameData(string gameDataPath)
         {
+            Utils.InitLog();
             CharactersPath = Path.Combine(gameDataPath, CharactersFileName);
             ProfilePath = Path.Combine(gameDataPath, ProfileFileName);
-            if (!ValidateGamePath(gameDataPath)) { ValidGamePath = false; return;/*throw new Exception("Directory was not a valid game data path");*/ }
+            if (!ValidateGamePath(gameDataPath)) { ValidGamePath = false; Log.Warning($"{gameDataPath} was not a valid game data path"); return; }
             ValidGamePath = true;
             GameDataPath = gameDataPath;
+            Log.Information($"Game data path set to {GameDataPath}");
             CharactersPath = Path.Combine(GameDataPath, CharactersFileName);
+            Log.Information($"Character file set to {CharactersPath}");
             ProfilePath = Path.Combine(GameDataPath, ProfileFileName);
+            Log.Information($"Profile file set to {ProfilePath}");
             BackupPath = Path.Combine(Directory.GetCurrentDirectory(), BackupFolder);
+            Log.Information($"Backup folder set to {BackupPath}");
         }
 
         public CharacterExplorer GetCharacters()
@@ -44,14 +50,26 @@ namespace Icarus
             if (Directory.GetFiles(gamePath).Contains(CharactersPath) && Directory.GetFiles(gamePath).Contains(ProfilePath)) { return true; } return false;
         }
 
-        public void BackupData()
+        public bool BackupData()
         {
-            if (Directory.Exists(BackupPath)) { Directory.Delete(BackupPath); }
-            Directory.CreateDirectory(BackupPath);
-
-            foreach (var file in Directory.GetFiles(GameDataPath))
+            try
             {
-                File.Copy(file, Path.Combine(BackupPath, Path.GetFileName(file)));
+                if(Directory.Exists(BackupPath))
+                {
+                    Directory.Delete(BackupPath);
+                }
+                Directory.CreateDirectory(BackupPath);
+
+                foreach (var file in Directory.GetFiles(GameDataPath))
+                {
+                    File.Copy(file, Path.Combine(BackupPath, Path.GetFileName(file)));
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e.Message);
+                return false;
             }
         }
     }

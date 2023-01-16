@@ -1,11 +1,13 @@
-using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using Icarus;
 using Avalonia.Threading;
 using Avalonia.Controls;
-using Icarus_Toolkit.Views;
 using System.Threading.Tasks;
+using Serilog;
+using Icarus_Toolkit.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
+
 
 namespace Icarus_Toolkit.ViewModels
 {
@@ -176,7 +178,7 @@ namespace Icarus_Toolkit.ViewModels
         }
 
         public async Task SelectGameFolder()
-        {
+        {            
             ValidGamePath = false;
             var selectedPath = await GetFolderFromUser("Select Game Data Folder");
             GamePath = selectedPath;
@@ -189,6 +191,7 @@ namespace Icarus_Toolkit.ViewModels
         {
             IsWorking = true;
 
+            Log.Information($"Reloading game data from {GamePath}");
             gameData = new(GamePath);
 
             if(gameData.ValidGamePath)
@@ -206,6 +209,7 @@ namespace Icarus_Toolkit.ViewModels
             }
             else
             {
+                Log.Error($"{GamePath} was not a valid game data path");
                 IsWorking = false;
                 InformationString = "Selected path was not a valid game data dir";
                 SelectGameFolderButtonClicked();
@@ -214,14 +218,23 @@ namespace Icarus_Toolkit.ViewModels
 
         private void BackupData()
         {
-            gameData.BackupData();
-            InformationString = "Game Data Backed Up";
+            bool success = gameData.BackupData();
+            if (success)
+            {
+                InformationString = "Game Data Backed Up";
+                return;
+            }
+            else
+            {
+                InformationString = "Failed to backup data, check log for more details";
+            }
         }
 
         private void LoadSelectedCharacter()
         {
             IsWorking= true;
             SelectedCharacter = characterList[SelectedCharacterIndex];
+            Log.Information($"Reloading {SelectedCharacter.CharacterName}");
             SelectedCharacterLevel = Core.GetPlayerLevel(selectedCharacter.XP);
             CharacterDisplayName = $"{selectedCharacter.CharacterName} (Level {SelectedCharacterLevel})";
 
@@ -236,18 +249,28 @@ namespace Icarus_Toolkit.ViewModels
             CurrentLoadedCharacterIndex = SelectedCharacterIndex;
             InformationString = $"{CharacterDisplayName} Loaded";
             IsCharacterLoaded = true;
+            Log.Information($"{SelectedCharacter.CharacterName} reloaded");
             IsWorking= false;
         }
 
         private void ExportData()
         {
+            Log.Information("Exporting data");
             IsProgressVisible = true;
             isWorking = true;
             SetCharacterValues();
-            characterExplorerHandle.ExportCharacters(CharacterList);
+            bool successCharacter = characterExplorerHandle.ExportCharacters(characterList);
+            if(!successCharacter)
+            {
+                InformationString = "Characters data failed to export";
+            }
             Progress = 40;
             SetProfileVales();
-            profileExplorerHandle.ExportProfile(PlayerProfile);
+            bool profileSuccess = profileExplorerHandle.ExportProfile(playerProfile);
+            if(!profileSuccess)
+            {
+                InformationString = "Profile failed to export";
+            }
             Progress = 80;
             ReloadCharacter();
             InformationString = $"User #{PlayerProfile.UserID} | {selectedCharacter.CharacterName} was saved";
@@ -262,12 +285,14 @@ namespace Icarus_Toolkit.ViewModels
         {
             selectedCharacter.CharacterName = editedName;
             SelectedCharacter.XP = EditedXP;
+            Log.Information("Setting character values {@SelectedCharacter}", SelectedCharacter);
             CharacterList[selectedCharacterIndex] = SelectedCharacter;
             InformationString = "Character values saved";
         }
 
         private void SetProfileVales()
         {
+            Log.Information("Setting profile values {@MetaResources}", PlayerProfile.MetaResources);
             PlayerProfile.MetaResources[0].Count = Ren;
             PlayerProfile.MetaResources[1].Count = Exotic;
             InformationString = "Ren & Exotic values saved";
