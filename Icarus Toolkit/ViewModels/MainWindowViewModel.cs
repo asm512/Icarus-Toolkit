@@ -31,7 +31,7 @@ namespace Icarus_Toolkit.ViewModels
             get => editMode;
             set
             {
-                if (!WasCharacterExported)
+                if (!WasDataExported && value == false)
                 {
                     LoadSelectedCharacter();
                 }
@@ -39,6 +39,9 @@ namespace Icarus_Toolkit.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        [ObservableProperty]
+        private bool wasDataExported = false;
 
         [ObservableProperty]
         private string loadText = "Load Character Data";
@@ -100,9 +103,6 @@ namespace Icarus_Toolkit.ViewModels
 
         [ObservableProperty]
         private bool isCharacterLoaded = false;
-
-        [ObservableProperty]
-        private bool wasCharacterExported;
 
         private int currentLoadedCharacterIndex;
         private int CurrentLoadedCharacterIndex
@@ -174,6 +174,7 @@ namespace Icarus_Toolkit.ViewModels
             {
                 return result;
             }
+            InformationString = "Folder not selected";
             return await GetFolderFromUser(title);
         }
 
@@ -183,6 +184,7 @@ namespace Icarus_Toolkit.ViewModels
             var selectedPath = await GetFolderFromUser("Select Game Data Folder");
             GamePath = selectedPath;
             ReloadGameData();
+            LoadSelectedCharacter();
         }
 
         public Task SelectGameFolderButtonClicked() => SelectGameFolder();
@@ -233,14 +235,15 @@ namespace Icarus_Toolkit.ViewModels
         private void LoadSelectedCharacter()
         {
             IsWorking= true;
-            SelectedCharacter = characterList[SelectedCharacterIndex];
+            WasDataExported = false;
+            SelectedCharacter = CharacterList[SelectedCharacterIndex];
             Log.Information($"Reloading {SelectedCharacter.CharacterName}");
-            SelectedCharacterLevel = Core.GetPlayerLevel(selectedCharacter.XP);
-            CharacterDisplayName = $"{selectedCharacter.CharacterName} (Level {SelectedCharacterLevel})";
+            SelectedCharacterLevel = Core.GetPlayerLevel(SelectedCharacter.XP);
+            CharacterDisplayName = $"{SelectedCharacter.CharacterName} (Level {SelectedCharacterLevel})";
 
             #region Character
-            EditedXP = selectedCharacter.XP;
-            EditedName = selectedCharacter.CharacterName;
+            EditedXP = SelectedCharacter.XP;
+            EditedName = SelectedCharacter.CharacterName;
             #endregion
             #region Profile
             Ren = PlayerProfile.MetaResources[0].Count;
@@ -257,33 +260,33 @@ namespace Icarus_Toolkit.ViewModels
         {
             Log.Information("Exporting data");
             IsProgressVisible = true;
-            isWorking = true;
+            IsWorking = true;
             SetCharacterValues();
-            bool successCharacter = characterExplorerHandle.ExportCharacters(characterList);
+            bool successCharacter = characterExplorerHandle.ExportCharacters(CharacterList);
             if(!successCharacter)
             {
                 InformationString = "Characters data failed to export";
             }
             Progress = 40;
             SetProfileVales();
-            bool profileSuccess = profileExplorerHandle.ExportProfile(playerProfile);
+            bool profileSuccess = profileExplorerHandle.ExportProfile(PlayerProfile);
             if(!profileSuccess)
             {
                 InformationString = "Profile failed to export";
             }
             Progress = 80;
             ReloadCharacter();
-            InformationString = $"User #{PlayerProfile.UserID} | {selectedCharacter.CharacterName} was saved";
+            InformationString = $"User #{PlayerProfile.UserID} | {SelectedCharacter.CharacterName} was saved";
 
             Progress = 100;
-            WasCharacterExported = true;
-            isWorking= false;
+            WasDataExported = true;
+            IsWorking= false;
             IsProgressVisible= false;
         }
 
         private void SetCharacterValues()
         {
-            selectedCharacter.CharacterName = editedName;
+            SelectedCharacter.CharacterName = EditedName;
             SelectedCharacter.XP = EditedXP;
             Log.Information("Setting character values {@SelectedCharacter}", SelectedCharacter);
             CharacterList[selectedCharacterIndex] = SelectedCharacter;
@@ -303,18 +306,18 @@ namespace Icarus_Toolkit.ViewModels
         private void DisplayInformationString()
         {
             int seconds = InformationString.Length / 3;
-            informationStringTimer = new DispatcherTimer
+            InformationStringTimer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(5)
             };
-            informationStringTimer.Tick += (s, e) =>
+            InformationStringTimer.Tick += (s, e) =>
             {
                 IsInformationStringVisible = false;
-                informationStringTimer.Stop();
+                InformationStringTimer.Stop();
                 OnPropertyChanged(nameof(InformationStringTimer));
             };
             IsInformationStringVisible = true;
-            informationStringTimer.Start();
+            InformationStringTimer.Start();
             OnPropertyChanged(nameof(InformationStringTimer));
         }
     }

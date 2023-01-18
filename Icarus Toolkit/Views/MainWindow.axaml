@@ -82,7 +82,7 @@
 								<StackPanel>
 									<TextBlock>Character Name</TextBlock>
 									<TextBox Watermark="Character Name" Text="{Binding EditedName}" IsReadOnly="{Binding EditMode, Converter={StaticResource InverseBooleanConverter}}"></TextBox>
-									<ProgressBar Value="100" Foreground="Gray"></ProgressBar>
+									<Border Margin="5" Height="5" Background="Gray" CornerRadius="20"></Border>
 								</StackPanel>
 								<Image Margin="5" Width="100" Source="/Assets/icarus_logo.png"></Image>
 								<Slider Minimum="0" Maximum="{Binding MaxXP}" Value="{Binding EditedXP}" IsEnabled="{Binding EditMode}"></Slider>
@@ -93,11 +93,11 @@
 								<Image Margin="5" Width="100" Source="/Assets/ren.png"/>
 								<Slider Minimum="0" Maximum="{Binding MaximumRen}" Value="{Binding Ren}" IsEnabled="{Binding EditMode}"></Slider>
 								<TextBlock Text="{Binding Ren, StringFormat=' {0} Ren'}"></TextBlock>
-								<ProgressBar Value="100" Foreground="Gray"></ProgressBar>
+								<Border Margin="5" Height="5" Background="Gray" CornerRadius="20"></Border>
 								<Image Margin="5" Width="100" Source="/Assets/exotic.png"/>
 								<Slider Minimum="0" Maximum="{Binding MaximumExotic}" Value="{Binding Exotic}" IsEnabled="{Binding EditMode}"></Slider>
 								<TextBlock Text="{Binding Exotic, StringFormat=' {0} Exotic(s)'}"></TextBlock>
-								<ProgressBar Value="100" Foreground="Gray"></ProgressBar>
+								<Border Margin="5" Height="5" Background="Gray" CornerRadius="20"></Border>
 							</StackPanel>
 						</Grid>
 					</ScrollViewer>
