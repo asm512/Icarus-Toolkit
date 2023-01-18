@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using Icarus;
 using Avalonia.Threading;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 using Serilog;
 using Icarus_Toolkit.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
-
+using System.Diagnostics;
 
 namespace Icarus_Toolkit.ViewModels
 {
@@ -69,6 +70,9 @@ namespace Icarus_Toolkit.ViewModels
 
         [ObservableProperty]
         private bool isProgressVisible;
+
+        [ObservableProperty]
+        private bool isWarningIconVisible = false;
 
         #endregion
 
@@ -229,6 +233,7 @@ namespace Icarus_Toolkit.ViewModels
             else
             {
                 InformationString = "Failed to backup data, check log for more details";
+                IsWarningIconVisible = true;
             }
         }
 
@@ -266,6 +271,7 @@ namespace Icarus_Toolkit.ViewModels
             if(!successCharacter)
             {
                 InformationString = "Characters data failed to export";
+                IsWarningIconVisible = true;
             }
             Progress = 40;
             SetProfileVales();
@@ -273,6 +279,7 @@ namespace Icarus_Toolkit.ViewModels
             if(!profileSuccess)
             {
                 InformationString = "Profile failed to export";
+                IsWarningIconVisible = true;
             }
             Progress = 80;
             ReloadCharacter();
@@ -319,6 +326,11 @@ namespace Icarus_Toolkit.ViewModels
             IsInformationStringVisible = true;
             InformationStringTimer.Start();
             OnPropertyChanged(nameof(InformationStringTimer));
+        }
+        private void OpenLogFolder()
+        {
+            Process.Start("explorer.exe",Path.Combine(Directory.GetCurrentDirectory(), "logs"));
+            IsWarningIconVisible = false;
         }
     }
 }
