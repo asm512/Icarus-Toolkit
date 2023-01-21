@@ -54,6 +54,20 @@ namespace Icarus
             }
             Log.Information($"Refreshed {Characters.Count} characters");
         }
+
+        public void AddCharacter(List<Character> characters, int index)
+        {
+            var duplicateCharacter = characters[index].DeepClone();
+            duplicateCharacter.CharacterName += "2";
+            characters.Add(duplicateCharacter);
+            ExportCharacters(characters);
+        }
+
+        public void RemoveCharacter(List<Character> characters, int index)
+        {
+            characters.RemoveAt(index);
+            ExportCharacters(characters);
+        }
     }
 
     public class CharacterList

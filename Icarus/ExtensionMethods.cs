@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Icarus
 {
-    public static class ExtensionMethods
+    internal static class ExtensionMethods
     {
-        public static T DeepClone<T>(this T a)
+        internal static T DeepClone<T>(this T a)
         {
             using (MemoryStream stream = new MemoryStream())
             {

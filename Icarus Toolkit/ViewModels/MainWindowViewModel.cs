@@ -312,9 +312,16 @@ namespace Icarus_Toolkit.ViewModels
 
         private void DuplicateCharacter()
         {
-            //var duplicateCharacter = SelectedCharacter.DeepClone();
-            //CharacterList.Add(duplicateCharacter);
-            //ReloadCharacter();
+            characterExplorerHandle.AddCharacter(CharacterList, SelectedCharacterIndex);
+            ReloadGameData();
+            WasDataExported = true;
+        }
+
+        private void RemoveCharacter()
+        {
+            characterExplorerHandle.RemoveCharacter(CharacterList, SelectedCharacterIndex);
+            ReloadGameData();
+            WasDataExported = true;
         }
 
         private void DisplayInformationString()

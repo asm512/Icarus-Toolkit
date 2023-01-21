@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Serilog;
 
 namespace Icarus_Toolkit.Views
 {
@@ -15,6 +16,7 @@ namespace Icarus_Toolkit.Views
         {
             InitializeComponent();
             MainWindowHandle = this;
+            Log.Information("Application start");
         }
     }
 }
