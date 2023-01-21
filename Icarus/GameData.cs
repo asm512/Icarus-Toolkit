@@ -45,9 +45,13 @@ namespace Icarus
             return new ProfileExplorer(ProfilePath);
         }
 
-        private bool ValidateGamePath(string gamePath)
+        public static bool ValidateGamePath(string gamePath)
         {
-            if (Directory.GetFiles(gamePath).Contains(CharactersPath) && Directory.GetFiles(gamePath).Contains(ProfilePath)) { return true; } return false;
+            if (gamePath == "") { return false; }
+            var files = from f in Directory.EnumerateFiles(gamePath, "*.json")
+                        select Path.GetFileName(f);
+
+            if(files.Contains(CharactersFileName) && files.Contains(ProfileFileName)) { return true;  } return false;   
         }
 
         public bool BackupData()

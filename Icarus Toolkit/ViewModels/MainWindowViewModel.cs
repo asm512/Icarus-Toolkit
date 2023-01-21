@@ -9,6 +9,8 @@ using Serilog;
 using Icarus_Toolkit.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Diagnostics;
+using System.Configuration;
+using System.ComponentModel;
 
 namespace Icarus_Toolkit.ViewModels
 {
@@ -185,10 +187,20 @@ namespace Icarus_Toolkit.ViewModels
         public async Task SelectGameFolder()
         {            
             ValidGamePath = false;
-            var selectedPath = await GetFolderFromUser("Select Game Data Folder");
-            GamePath = selectedPath;
+            IsCharacterLoaded = false;
+            var SavedDataPath = ConfigurationManager.AppSettings["GameDataPath"] ?? "";
+            if (GameData.ValidateGamePath(SavedDataPath))
+            {
+                GamePath = ConfigurationManager.AppSettings["GameDataPath"];
+            }
+            else
+            {
+                var selectedPath = await GetFolderFromUser("Select Game Data Folder");
+                GamePath = selectedPath;
+                Utils.Utils.AddUpdateAppSettings("GameDataPath", GamePath);
+            }
+
             ReloadGameData();
-            LoadSelectedCharacter();
         }
 
         public Task SelectGameFolderButtonClicked() => SelectGameFolder();
@@ -197,7 +209,7 @@ namespace Icarus_Toolkit.ViewModels
         {
             IsWorking = true;
 
-            Log.Information($"Reloading game data from {GamePath}");
+            Log.Information($"Loading game data from {GamePath}");
             gameData = new(GamePath);
 
             if(gameData.ValidGamePath)
@@ -212,6 +224,7 @@ namespace Icarus_Toolkit.ViewModels
                 ValidGamePath = true;
                 InformationString = "Game data loaded";
                 IsWorking = false;
+                LoadSelectedCharacter();
             }
             else
             {

@@ -39,10 +39,24 @@
     </PackageReference>
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="System.Text.Json" Version="7.0.1" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.5.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Icarus\Icarus.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="IcarusToolkit.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IcarusToolkit.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="IcarusToolkit.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>IcarusToolkit.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>
