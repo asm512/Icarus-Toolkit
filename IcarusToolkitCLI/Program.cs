@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Icarus;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -14,18 +15,23 @@ namespace IcarusToolkitCLI
         {
             var gameData = new Icarus.GameData(Path.Combine(Directory.GetCurrentDirectory(), "sandbox"));
             var charactersData = gameData.GetCharacters();
+            var PlayerProfile = gameData.GetProfile();
 
-            PrintProperties(charactersData.Characters, true);
+            //PrintProperties(charactersData.Characters, true);
+
+            //PrintProperties(charactersData.Characters[0].Talents, true);
+
+            //var SortedList = PlayerProfile.PlayerProfile.Talents.OrderBy(t => t.RowName).ToList();
+
+            List<Talent> talentData = PlayerProfile.PlayerProfile.Talents.Where(x => x.RowName.ToLower().Contains("prospect")).Select(x => x).ToList();
+
+            PrintProperties(talentData, true);
 
 
             Console.WriteLine();
 
-            var PlayerProfile = gameData.GetProfile();
-
-
-            PrintProperties(PlayerProfile.PlayerProfile);
-            PrintProperties(PlayerProfile.PlayerProfile.MetaResources, true);
-
+            //PrintProperties(PlayerProfile.PlayerProfile);
+            //PrintProperties(PlayerProfile.PlayerProfile.MetaResources, true);
             Console.WriteLine();
 
             KeepOpen();

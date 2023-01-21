@@ -17,6 +17,9 @@ namespace Icarus_Toolkit.Utils
                 .WriteTo.File(LogPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10, shared: true)
                 .CreateLogger();
             isLogInit = true;
+            Log.Information("");
+            Log.Information("LOG INIT");
+            Log.Information("");
         }
 
         public static void AddUpdateAppSettings(string key, string value)

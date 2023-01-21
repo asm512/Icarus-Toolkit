@@ -56,18 +56,20 @@ namespace Icarus
 
         public bool BackupData()
         {
+            var currentBackupPath = Path.Combine(BackupPath, $"{DateTime.Now.ToString().Replace(":","-")}");
             try
             {
-                if(Directory.Exists(BackupPath))
+                if(Directory.Exists(currentBackupPath))
                 {
-                    Directory.Delete(BackupPath);
+                    Directory.Delete(currentBackupPath);
                 }
-                Directory.CreateDirectory(BackupPath);
+                Directory.CreateDirectory(currentBackupPath);
 
                 foreach (var file in Directory.GetFiles(GameDataPath))
                 {
-                    File.Copy(file, Path.Combine(BackupPath, Path.GetFileName(file)));
+                    File.Copy(file, Path.Combine(currentBackupPath, Path.GetFileName(file)));
                 }
+                Log.Information($"Backup created at {currentBackupPath}");
                 return true;
             }
             catch (Exception e)

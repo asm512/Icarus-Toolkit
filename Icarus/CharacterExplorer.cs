@@ -59,6 +59,7 @@ namespace Icarus
         {
             var duplicateCharacter = characters[index].DeepClone();
             duplicateCharacter.CharacterName += "2";
+            duplicateCharacter.ChrSlot = characters.Count - 1;
             characters.Add(duplicateCharacter);
             ExportCharacters(characters);
         }
