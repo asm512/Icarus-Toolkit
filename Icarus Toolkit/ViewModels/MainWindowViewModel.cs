@@ -310,6 +310,13 @@ namespace Icarus_Toolkit.ViewModels
 
         private void ReloadCharacter() => LoadSelectedCharacter();
 
+        private void DuplicateCharacter()
+        {
+            //var duplicateCharacter = SelectedCharacter.DeepClone();
+            //CharacterList.Add(duplicateCharacter);
+            //ReloadCharacter();
+        }
+
         private void DisplayInformationString()
         {
             int seconds = InformationString.Length / 3;

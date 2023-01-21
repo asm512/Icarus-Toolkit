@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.IO;
 using Serilog;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Icarus
 {
@@ -61,6 +62,7 @@ namespace Icarus
         public List<string> CharactersStream { get; set; }
     }
 
+    [Serializable]
     public class Character
     {
         public string CharacterName { get; set; }
@@ -77,6 +79,7 @@ namespace Icarus
         public List<TalentData> Talents { get; set; }
     }
 
+    [Serializable]
     public class CosmeticData
     {
         public int Customization_Head { get; set; }
@@ -94,6 +97,7 @@ namespace Icarus
         public int Customization_EyeColor { get; set; }
     }
 
+    [Serializable]
     public class TalentData
     {
         public string RowName { get; set; }
