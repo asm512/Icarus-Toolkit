@@ -15,8 +15,8 @@ Note: The library may include functions that are not yet implemented in the UI.
  - [ ] Handle Character data
 	 - [x] Read & write Character data
 	 - [ ] Backup & restore characters
-	 - [ ] Duplicate characters
-	 - [ ] Remove characters
+	 - [x] Duplicate characters
+	 - [x] Remove characters
  - [ ] Handle Profile data
 	 - [x] Read & write Profile data
 	 - [ ] Backup & restore profile
