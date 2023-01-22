@@ -5,7 +5,7 @@ Icarus Toolkit is an app for viewing & modifying your player data.
 It utilizes the `Icarus` library, included in this repository which handles the logic behind parsing & writing game data.
 Note: The library may include functions that are not yet implemented in the UI.
 
-![UI](https://i.imgur.com/SzM1tyH.png)
+![UI](https://i.imgur.com/Yw5AwL2.png)
 
 
 # Planned Features
